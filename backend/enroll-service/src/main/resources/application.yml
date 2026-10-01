@@ -1,0 +1,32 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:3306/mall?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# Seata AT 配置：
+# tx-service-group 是事务分组名，vgroup-mapping 把它映射到 seata-server 集群名 default，
+# grouplist 直接给出 server 地址（file 注册方式，最简配置，免去再搭注册中心）。
+# 涉事的每个服务（enroll/seat）都要配，且 undo_log 表必须存在（见 sql/undo_log.sql）。
+seata:
+  enabled: true
+  tx-service-group: mall_tx_group
+  service:
+    vgroup-mapping:
+      mall_tx_group: default
+    grouplist:
+      default: ${SEATA_HOST:127.0.0.1:8091}
+  data-source-proxy-mode: AT
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+feign:
+  sentinel:
+    enabled: true

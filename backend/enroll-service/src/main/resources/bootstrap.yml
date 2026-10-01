@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: enroll-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_ADDR:127.0.0.1:8848}
+      config:
+        server-addr: ${NACOS_ADDR:127.0.0.1:8848}
+        file-extension: yaml
+        shared-configs:
+          - data-id: mall-common.yaml
+            group: DEFAULT_GROUP
+            refresh: true

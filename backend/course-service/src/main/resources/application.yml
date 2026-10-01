@@ -1,0 +1,31 @@
+server:
+  port: 8082
+
+spring:
+  # 数据源：演示环境一库多表（mall 库）；生产按服务垂直分库（course 库独立）
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:3306/mall?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: 6379
+      database: 0
+      # lettuce 连接池：秒杀高并发下默认池大小不够会排队，适当调大
+      lettuce:
+        pool:
+          max-active: 50
+          max-idle: 20
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    # SQL 打印：演示看执行过程，生产关掉（info 级别刷屏）
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# Feign：开启 Sentinel 支持后，fallback 才能在熔断时生效
+feign:
+  sentinel:
+    enabled: true

@@ -1,0 +1,34 @@
+# 网关端口：前端 / docker-compose 统一打这个端口
+server:
+  port: 8080
+
+spring:
+  cloud:
+    gateway:
+      # 路由规则：按 /api/xxx 前缀转发到对应服务（lb:// 走 Nacos 服务发现 + LoadBalancer）
+      # StripPrefix=0：保留完整路径转发，各服务 Controller 直接用 /api/xxx 映射
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/user/**
+        - id: course-service
+          uri: lb://course-service
+          predicates:
+            - Path=/api/course/**,/api/seckill/**
+        - id: enroll-service
+          uri: lb://enroll-service
+          predicates:
+            - Path=/api/enroll/**
+        - id: seat-service
+          uri: lb://seat-service
+          predicates:
+            - Path=/api/seat/**
+      # 跨域：本地 vite dev 和线上 nginx 都可能跨域调网关
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origin-patterns: "*"
+            allowed-methods: "*"
+            allowed-headers: "*"
+            allow-credentials: true

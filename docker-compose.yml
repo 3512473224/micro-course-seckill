@@ -1,0 +1,181 @@
+# 校园抢课系统（微服务高并发版）一键启动
+# 用法：docker compose up -d --build
+# 停止：docker compose down（含 -v 会清空 mysql 数据卷，慎用）
+#
+# 端口一览：
+#   80    前端（nginx）
+#   8080  网关（所有后端接口统一入口）
+#   8081  user-service      8082  course-service
+#   8083  enroll-service    8084  seat-service
+#   8848  Nacos 控制台      8091  Seata TC      7091  Seata 控制台
+
+x-common-env: &common-env
+  NACOS_ADDR: nacos:8848
+  MYSQL_HOST: mysql
+  MYSQL_USER: root
+  MYSQL_PASSWORD: 123456
+  REDIS_HOST: redis
+  SEATA_HOST: seata-server:8091
+  JWT_SECRET: mall-dev-secret-please-change-in-prod
+  TZ: Asia/Shanghai
+
+services:
+  mysql:
+    image: mysql:8
+    container_name: course-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: mall
+      TZ: Asia/Shanghai
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./sql/undo_log.sql:/docker-entrypoint-initdb.d/02-undo-log.sql:ro
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p123456"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    container_name: course-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  nacos:
+    image: nacos/nacos-server:v2.3.2
+    container_name: course-nacos
+    environment:
+      MODE: standalone
+      NACOS_AUTH_ENABLE: "false"   # 演示关闭鉴权；生产必须开启并改默认密码
+      TZ: Asia/Shanghai
+    volumes:
+      - nacos-data:/home/nacos/data
+    ports:
+      - "8848:8848"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8848/nacos/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+
+  seata-server:
+    image: apache/seata-server:2.0.0
+    container_name: course-seata
+    ports:
+      - "8091:8091"
+      - "7091:7091"
+    volumes:
+      - ./backend/seata/conf/application.yml:/seata-server/resources/application.yml:ro
+    environment:
+      TZ: Asia/Shanghai
+    depends_on:
+      - nacos   # 仅保证启动顺序；file 模式下 seata 不依赖 nacos 也能工作
+
+  gateway:
+    build:
+      context: ./backend
+      args:
+        MODULE: gateway
+    container_name: course-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      <<: *common-env
+    depends_on:
+      nacos:
+        condition: service_healthy
+
+  user-service:
+    build:
+      context: ./backend
+      args:
+        MODULE: user-service
+    container_name: course-user
+    ports:
+      - "8081:8081"
+    environment:
+      <<: *common-env
+    depends_on:
+      nacos:
+        condition: service_healthy
+
+  course-service:
+    build:
+      context: ./backend
+      args:
+        MODULE: course-service
+    container_name: course-course
+    ports:
+      - "8082:8082"
+    environment:
+      <<: *common-env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      nacos:
+        condition: service_healthy
+
+  enroll-service:
+    build:
+      context: ./backend
+      args:
+        MODULE: enroll-service
+    container_name: course-enroll
+    ports:
+      - "8083:8083"
+    environment:
+      <<: *common-env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      nacos:
+        condition: service_healthy
+      seata-server:
+        condition: service_started
+
+  seat-service:
+    build:
+      context: ./backend
+      args:
+        MODULE: seat-service
+    container_name: course-seat
+    ports:
+      - "8084:8084"
+    environment:
+      <<: *common-env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      nacos:
+        condition: service_healthy
+      seata-server:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: course-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      gateway:
+        condition: service_started
+
+volumes:
+  mysql-data:
+  redis-data:
+  nacos-data:

@@ -1,0 +1,20 @@
+# Seata Server 2.0.0 配置（file 模式，最简可运行）
+# 挂载到容器 /seata-server/resources/application.yml
+server:
+  port: 7091  # 控制台端口
+
+seata:
+  config:
+    # file 模式：配置读本地文件，不依赖 Nacos/Apollo
+    type: file
+  registry:
+    # file 模式：服务注册用本地文件，客户端直连 grouplist 地址即可
+    type: file
+  store:
+    # file 模式：事务日志落本地文件；生产换 db/redis 模式防单点丢失
+    mode: file
+  server:
+    service-port: 8091 # 客户端（各微服务）连接的 TC 端口
+  security:
+    secretKey: SeataSecretKey0c382ef121d778043159d34a7474986a
+    tokenValidityInMilliseconds: 1800000

@@ -1,0 +1,18 @@
+# bootstrap.yml：应用启动最先加载，用来连 Nacos（注册中心 + 配置中心）
+# 需要 spring-cloud-starter-bootstrap 依赖，否则 Cloud 2023 默认不启用 bootstrap
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        # 环境变量注入：docker 里是 nacos:8848，本地直跑默认 127.0.0.1:8848
+        server-addr: ${NACOS_ADDR:127.0.0.1:8848}
+      config:
+        server-addr: ${NACOS_ADDR:127.0.0.1:8848}
+        file-extension: yaml
+        # 共享配置：所有服务共用的开关，改 Nacos 里 mall-common.yaml 即时生效（refresh=true）
+        shared-configs:
+          - data-id: mall-common.yaml
+            group: DEFAULT_GROUP
+            refresh: true

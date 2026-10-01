@@ -1,0 +1,25 @@
+server:
+  port: 8084
+
+spring:
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:3306/mall?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+# Seata AT 分支方：同一事务分组，与 enroll-service 的发起方对应
+seata:
+  enabled: true
+  tx-service-group: mall_tx_group
+  service:
+    vgroup-mapping:
+      mall_tx_group: default
+    grouplist:
+      default: ${SEATA_HOST:127.0.0.1:8091}
+  data-source-proxy-mode: AT
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

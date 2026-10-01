@@ -1,0 +1,4 @@
+server:
+  port: 8081
+
+# user-service 是纯内存 mock，无需数据库；其它服务的数据源配置见各自的 application.yml
