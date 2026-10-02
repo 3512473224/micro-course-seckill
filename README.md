@@ -54,7 +54,7 @@
 | 网关 | Spring Cloud Gateway（WebFlux） | - |
 | 服务调用 | OpenFeign | - |
 | 限流熔断 | Sentinel（@SentinelResource + Feign fallback） | - |
-| 分布式事务 | Seata AT 模式 | 2.0.0 |
+| 分布式事务 | Seata AT 模式 | 2.7.0 |
 | 缓存/秒杀 | Redis（Lua 原子脚本） | 7 |
 | 数据库 | MySQL | 8 |
 | ORM | MyBatis-Plus | 3.5.7 |
@@ -64,7 +64,7 @@
 ## 一键启动
 
 ```bash
-cd micro-mall
+cd micro-course-seckill
 
 # 1. 构建并启动全部 10 个容器（首次构建约 3~8 分钟，下载依赖+打包）
 docker compose up -d --build
@@ -74,7 +74,7 @@ docker compose ps
 docker compose logs -f course-service
 
 # 3. 打开前端
-open http://localhost        # 或服务器 IP
+start http://localhost       # Windows PowerShell；macOS 用 open http://localhost
 # Nacos 控制台：http://localhost:8848/nacos
 # Seata 控制台：http://localhost:7091（账号密码见 seata 配置）
 
