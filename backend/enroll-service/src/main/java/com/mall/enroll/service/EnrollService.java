@@ -13,7 +13,10 @@ import com.mall.enroll.feign.SeatFeignClient;
 import com.mall.enroll.mapper.EnrollOrderMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.seata.spring.annotation.GlobalTransactional;
+import io.seata.spring.annotation.GlobalTransactional;
+// 注意：必须用 io.seata（不是 org.apache.seata）。
+// 包名 org.apache.seata 是从 Seata 2.1.0 才开始的；而 Spring Cloud Alibaba 2023.0.1.0
+// 管理的 seata.version=2.0.0，坐标仍是 io.seata。写错会导致编译期类缺失。
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +67,7 @@ CourseDTO course = getAvailableCourse(req.getCourseId());
 EnrollOrder order = buildOrder(userId, course, 0);
 enrollOrderMapper.insert(order);
 log.info("本地选课单已创建 id={} xid={}",
-order.getId(), org.apache.seata.core.context.RootContext.getXID());
+order.getId(), io.seata.core.context.RootContext.getXID());
 
 // 远程扣名额：名额不足时 seat-service 抛 BizException -> Feign 抛异常 ->
 // 触发全局回滚，上面 insert 的选课单会被 undo_log 反向删除
