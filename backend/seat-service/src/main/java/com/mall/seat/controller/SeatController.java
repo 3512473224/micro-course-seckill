@@ -1,6 +1,8 @@
 package com.mall.seat.controller;
 
 import com.mall.common.dto.DeductSeatRequest;
+import com.mall.common.dto.ReleaseSeatRequest;
+import com.mall.common.dto.SeatDTO;
 import com.mall.common.result.Result;
 import com.mall.seat.service.SeatService;
 import jakarta.validation.Valid;
@@ -24,8 +26,16 @@ public class SeatController {
         return Result.ok();
     }
 
+    /** 退课释放名额：available 增加，上限为 total */
+    @PostMapping("/release")
+    public Result<Void> release(@Valid @RequestBody ReleaseSeatRequest request) {
+        seatService.release(request);
+        return Result.ok();
+    }
+
+    /** 名额详情：{courseId,total,available} */
     @GetMapping("/{courseId}")
-    public Result<Integer> remain(@PathVariable Long courseId) {
-        return Result.ok(seatService.remain(courseId));
+    public Result<SeatDTO> info(@PathVariable Long courseId) {
+        return Result.ok(seatService.info(courseId));
     }
 }

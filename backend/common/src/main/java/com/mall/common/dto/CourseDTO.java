@@ -22,4 +22,16 @@ public class CourseDTO implements Serializable {
     private String teacher;
     private BigDecimal credit;
     private Integer status;
+    /** 上课时间：周几（1-7） */
+    private Integer weekday;
+    /** 起始节次 */
+    private Integer startSection;
+    /** 结束节次 */
+    private Integer endSection;
+    /** 教学周，如 "1-16"、"1-8,10-16" */
+    private String weeks;
+    /** 上课教室，如 "教3-201" */
+    private String classroom;
+    /** 授课教师的用户 id（教师账号登录后开课时写入） */
+    private Long teacherId;
 }

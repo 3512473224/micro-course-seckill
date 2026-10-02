@@ -14,4 +14,6 @@ public final class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     /** 网关鉴权通过后透传的用户 id */
     public static final String USER_ID_HEADER = "X-User-Id";
+    /** 网关鉴权通过后透传的用户角色（student/teacher/admin） */
+    public static final String USER_ROLE_HEADER = "X-User-Role";
 }

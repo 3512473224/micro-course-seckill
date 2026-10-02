@@ -1,6 +1,8 @@
 package com.mall.user.controller;
 
 import com.mall.common.constant.SecurityConstants;
+import com.mall.common.dto.IdListRequest;
+import com.mall.common.dto.UserBriefDTO;
 import com.mall.common.result.Result;
 import com.mall.user.dto.LoginRequest;
 import com.mall.user.dto.LoginResponse;
@@ -11,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @RefreshScope：Nacos 配置中心改了 mall-common.yaml 后，
@@ -38,6 +42,15 @@ public class UserController {
     @GetMapping("/me")
     public Result<UserVO> me(@RequestHeader(SecurityConstants.USER_ID_HEADER) Long userId) {
         return Result.ok(userService.me(userId));
+    }
+
+    /**
+     * 批量查用户：入参 {ids:[1,2]}，返回 {id:{username,nickname}}。
+     * 主要给教师端"花名册"用；服务间经 Feign 直接调用，不走网关。
+     */
+    @PostMapping("/batch")
+    public Result<Map<Long, UserBriefDTO>> batch(@RequestBody IdListRequest request) {
+        return Result.ok(userService.batch(request.getIds()));
     }
 
     /** 配置中心动态刷新演示：去 Nacos 改 mall-common.yaml 的 mall.demo.banner 再调本接口 */

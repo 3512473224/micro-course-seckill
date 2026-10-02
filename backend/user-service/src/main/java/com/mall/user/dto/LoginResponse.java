@@ -12,4 +12,6 @@ public class LoginResponse {
     private Long userId;
     private String username;
     private String nickname;
+    /** student / teacher / admin */
+    private String role;
 }

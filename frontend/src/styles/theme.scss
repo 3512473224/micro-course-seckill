@@ -1,0 +1,191 @@
+/* ============================================================
+ * 学衡教务 · 学术风主题
+ * 主色：深藏青 #1e3a5f ｜ 点缀：暖橙 #e8862e
+ * 通过 CSS 变量覆盖 Element Plus 全套 primary / warning 色板，
+ * 禁止 #409EFF 直出。
+ * ============================================================ */
+
+:root {
+  /* 品牌色 */
+  --brand-navy: #1e3a5f;
+  --brand-navy-deep: #14293f;
+  --brand-navy-ink: #0f1f33;
+  --brand-orange: #e8862e;
+  --brand-orange-dark: #c96f1e;
+  --brand-bg: #f2f4f7;
+  --brand-card: #ffffff;
+  --brand-text: #1f2a37;
+  --brand-text-2: #5b6b7c;
+  --brand-text-3: #8a97a5;
+  --brand-border: #e2e7ee;
+  --brand-radius: 12px;
+
+  /* Element Plus · primary（深藏青）全套覆盖 */
+  --el-color-primary: #1e3a5f;
+  --el-color-primary-light-3: #61758f;
+  --el-color-primary-light-5: #8e9caf;
+  --el-color-primary-light-7: #bcc4cf;
+  --el-color-primary-light-8: #d2d8df;
+  --el-color-primary-light-9: #e9ebef;
+  --el-color-primary-dark-2: #182e4c;
+
+  /* Element Plus · warning（暖橙）全套覆盖 */
+  --el-color-warning: #e8862e;
+  --el-color-warning-light-3: #f0a45e;
+  --el-color-warning-light-5: #f4c298;
+  --el-color-warning-light-7: #f9dfc4;
+  --el-color-warning-light-8: #fceedd;
+  --el-color-warning-light-9: #fdf6ee;
+  --el-color-warning-dark-2: #ba6b25;
+
+  /* 全局圆角与字体 */
+  --el-border-radius-base: 8px;
+  --el-border-radius-small: 6px;
+  --el-font-family: -apple-system, blinkmacsystemfont, "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", "Segoe UI",
+    system-ui, sans-serif;
+}
+
+/* ---------- 页面基底 ---------- */
+body {
+  margin: 0;
+  background: var(--brand-bg);
+  color: var(--brand-text);
+  font-family: var(--el-font-family);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.page-head {
+  margin: 4px 0 20px;
+}
+.page-head h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.page-head p {
+  margin: 0;
+  color: var(--brand-text-2);
+  font-size: 13px;
+}
+
+/* ---------- 卡片 ---------- */
+.el-card {
+  border: 1px solid var(--brand-border);
+  border-radius: var(--brand-radius);
+  --el-card-padding: 20px;
+}
+.el-card.is-hover-shadow:hover {
+  box-shadow: 0 8px 28px rgba(30, 58, 95, 0.12);
+  border-color: #cfd8e3;
+}
+
+/* ---------- 按钮 ---------- */
+.el-button {
+  border-radius: 8px;
+  font-weight: 500;
+}
+.el-button--primary {
+  --el-button-bg-color: var(--brand-navy);
+  --el-button-border-color: var(--brand-navy);
+  --el-button-hover-bg-color: #2a4a75;
+  --el-button-hover-border-color: #2a4a75;
+  --el-button-active-bg-color: var(--brand-navy-deep);
+  --el-button-active-border-color: var(--brand-navy-deep);
+}
+.el-button--warning {
+  --el-button-bg-color: var(--brand-orange);
+  --el-button-border-color: var(--brand-orange);
+  --el-button-hover-bg-color: #ef9a48;
+  --el-button-hover-border-color: #ef9a48;
+  --el-button-active-bg-color: var(--brand-orange-dark);
+  --el-button-active-border-color: var(--brand-orange-dark);
+}
+
+/* 暖橙点缀按钮（非 element 语义色） */
+.btn-accent {
+  background: var(--brand-orange);
+  border-color: var(--brand-orange);
+  color: #fff;
+}
+.btn-accent:hover,
+.btn-accent:focus {
+  background: #ef9a48;
+  border-color: #ef9a48;
+  color: #fff;
+}
+
+/* ---------- 表格 ---------- */
+.el-table {
+  --el-table-header-bg-color: #eef1f5;
+  --el-table-header-text-color: var(--brand-text-2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.el-table th.el-table__cell {
+  font-weight: 600;
+}
+
+/* ---------- 标签 ---------- */
+.el-tag {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* ---------- 输入框聚焦 ---------- */
+.el-input__wrapper.is-focus,
+.el-textarea__inner:focus,
+.el-select .el-input.is-focus .el-input__wrapper {
+  box-shadow: 0 0 0 1px var(--brand-navy) inset;
+}
+
+/* ---------- 分页 / 对话框 ---------- */
+.el-dialog {
+  border-radius: 14px;
+}
+.el-drawer {
+  --el-drawer-padding-primary: 20px;
+}
+
+/* ---------- 空状态文案 ---------- */
+.el-empty__description p {
+  color: var(--brand-text-3);
+}
+
+/* ---------- 通用小组件 ---------- */
+.muted { color: var(--brand-text-3); }
+.text-2 { color: var(--brand-text-2); }
+.stat-num {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--brand-navy);
+  font-variant-numeric: tabular-nums;
+}
+.divider { height: 1px; background: var(--brand-border); margin: 16px 0; }
+
+/* 课程封面色块（渐变由内联 style 决定底色倾向） */
+.cover-block {
+  height: 120px;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* 移动端：收紧页边距 */
+@media (max-width: 768px) {
+  .page { padding: 16px 12px; }
+}

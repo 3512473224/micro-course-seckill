@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 秒杀抢课核心链路（面试最高频深挖点，建议把流程背下来）：
+ * 秒杀抢课核心链路：
  *
  *  1. 校验活动时间窗（DB 查 seckill_course，低频操作可接受）；
  *  2. SETNX 限购：seckill:limit:{courseId}:{userId}，同一学生限抢 1 个名额，重复请求直接拒绝；

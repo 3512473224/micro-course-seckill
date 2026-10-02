@@ -20,4 +20,13 @@ public interface SeatMapper extends BaseMapper<Seat> {
     @Update("UPDATE seat SET available = available - #{quantity}, frozen = frozen + #{quantity} "
             + "WHERE course_id = #{courseId} AND available >= #{quantity}")
     int deduct(@Param("courseId") Long courseId, @Param("quantity") int quantity);
+
+    /**
+     * 释放名额：退课时把名额还回来。
+     * LEAST(total, ...) 保证 available 永远不超过 total，防止重复释放刷出"幽灵名额"。
+     */
+    @Update("UPDATE seat SET available = LEAST(total, available + #{quantity}), "
+            + "frozen = GREATEST(0, frozen - #{quantity}) "
+            + "WHERE course_id = #{courseId}")
+    int release(@Param("courseId") Long courseId, @Param("quantity") int quantity);
 }
