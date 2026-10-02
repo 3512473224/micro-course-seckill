@@ -3,6 +3,17 @@
 server:
   port: 7091  # 控制台端口
 
+# 官方 2.0.0 要求这两块：缺了 logging.file.path / console.user 会导致 Bean 初始化失败
+logging:
+  config: classpath:logback-spring.xml
+  file:
+    path: ${log.home:${user.home}/logs/seata}
+
+console:
+  user:
+    username: seata
+    password: seata
+
 seata:
   config:
     # file 模式：配置读本地文件，不依赖 Nacos/Apollo

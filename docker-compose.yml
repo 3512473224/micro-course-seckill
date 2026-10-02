@@ -71,7 +71,7 @@ services:
       retries: 12
 
   seata-server:
-    image: apache/seata-server:2.0.0
+    image: apache/seata-server:2.7.0
     container_name: course-seata
     ports:
       - "8091:8091"
